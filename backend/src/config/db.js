@@ -1,35 +1,38 @@
-
-
-
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-const dialect = process.env.DATABASE_URL || 'sqlite';
-
 let sequelize;
 
-if (dialect === 'sqlite') {
+// Detect Render deployment
+const isRender = !!process.env.DATABASE_URL;
+
+if (isRender) {
+    console.log("🌐 Using Render PostgreSQL");
+
+    sequelize = new Sequelize(process.env.DATABASE_URL, {
+        dialect: "postgres",
+        protocol: "postgres",
+        logging: false,
+        dialectOptions: {
+            ssl: {
+                require: true,
+                rejectUnauthorized: false
+            }
+        }
+    });
+
+} else {
+    console.log("💾 Using Local SQLite");
+
     sequelize = new Sequelize({
         dialect: 'sqlite',
         storage: './database.sqlite',
         logging: false
     });
-} else {
-    sequelize = new Sequelize(
-        process.env.DB_NAME,
-        process.env.DB_USER,
-        process.env.DB_PASSWORD,
-        {
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT,
-            dialect: dialect,
-            logging: false,
-        }
-    );
 }
 
 /** 
- * 🔥 Test DB connection + sync models
+ * Test DB connection + sync models
  */
 async function connectDB() {
     try {
@@ -43,10 +46,70 @@ async function connectDB() {
     }
 }
 
-// Run connection test
 connectDB();
 
 module.exports = sequelize;
+
+
+
+
+
+
+
+// const { Sequelize } = require('sequelize');
+// require('dotenv').config();
+
+// const dialect = process.env.DATABASE_URL || 'sqlite';
+
+// let sequelize;
+
+// if (dialect === 'sqlite') {
+//     sequelize = new Sequelize({
+//         dialect: 'sqlite',
+//         storage: './database.sqlite',
+//         logging: false
+//     });
+// } else {
+//     sequelize = new Sequelize(
+//         process.env.DB_NAME,
+//         process.env.DB_USER,
+//         process.env.DB_PASSWORD,
+//         {
+//             host: process.env.DB_HOST,
+//             port: process.env.DB_PORT,
+//             dialect: dialect,
+//             logging: false,
+//         }
+//     );
+// }
+
+// /**
+//  * 🔥 Test DB connection + sync models
+//  */
+// async function connectDB() {
+//     try {
+//         await sequelize.authenticate();
+//         console.log("✅ Database connected");
+
+//         await sequelize.sync();
+//         console.log("✅ Database synced");
+//     } catch (error) {
+//         console.error("❌ Database connection failed:", error);
+//     }
+// }
+
+// // Run connection test
+// connectDB();
+
+// module.exports = sequelize;
+
+
+
+
+
+
+
+
 
 
 // const { Sequelize } = require('sequelize');
