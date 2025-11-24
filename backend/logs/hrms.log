@@ -141,3 +141,6 @@
 {"level":"info","message":{"action":"EMP_UNASSIGN","details":{"employeeId":7,"teamId":6},"orgId":1,"userId":1},"timestamp":"2025-11-23T16:22:00.292Z"}
 {"level":"info","message":{"action":"EMP_ASSIGN","details":{"employeeId":7,"teamId":6},"orgId":1,"userId":1},"timestamp":"2025-11-23T16:22:07.769Z"}
 {"level":"info","message":{"action":"EMP_UNASSIGN","details":{"employeeId":5,"teamId":6},"orgId":1,"userId":1},"timestamp":"2025-11-23T16:22:21.512Z"}
+{"level":"info","message":{"action":"ORG_CREATE","details":{"orgId":15},"orgId":15,"userId":15},"timestamp":"2025-11-24T02:54:02.706Z"}
+{"level":"info","message":{"action":"ORG_CREATE","details":{"orgId":16},"orgId":16,"userId":16},"timestamp":"2025-11-24T03:01:33.753Z"}
+{"level":"info","message":{"action":"USER_LOGIN","details":{"userId":1},"orgId":1,"userId":1},"timestamp":"2025-11-24T03:11:48.236Z"}
