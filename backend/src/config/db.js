@@ -3,52 +3,104 @@ require('dotenv').config();
 
 let sequelize;
 
-// Detect Render deployment
-const isRender = !!process.env.DATABASE_URL;
-
-if (isRender) {
-    console.log("🌐 Using Render PostgreSQL");
-
+if (process.env.RENDER === "true") {
+    // Render deployment using DATABASE_URL
     sequelize = new Sequelize(process.env.DATABASE_URL, {
         dialect: "postgres",
         protocol: "postgres",
         logging: false,
         dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
+            ssl: { require: true, rejectUnauthorized: false }
         }
     });
-
 } else {
-    console.log("💾 Using Local SQLite");
-
-    sequelize = new Sequelize({
-        dialect: 'sqlite',
-        storage: './database.sqlite',
-        logging: false
-    });
+    // Local development using separate DB env variables
+    sequelize = new Sequelize(
+        process.env.DB_NAME,
+        process.env.DB_USER,
+        process.env.DB_PASSWORD,
+        {
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT,
+            dialect: process.env.DB_DIALECT || "postgres",
+            logging: console.log
+        }
+    );
 }
 
-/** 
- * Test DB connection + sync models
- */
 async function connectDB() {
     try {
         await sequelize.authenticate();
-        console.log("✅ Database connected");
+        console.log("✅ PostgreSQL connected");
 
-        await sequelize.sync();
-        console.log("✅ Database synced");
+        await sequelize.sync();  // sync all models
+        console.log("✅ Models synced");
     } catch (error) {
-        console.error("❌ Database connection failed:", error);
+        console.error("❌ DB error:", error);
     }
 }
 
 connectDB();
 
 module.exports = sequelize;
+
+
+
+
+
+
+
+// const { Sequelize } = require('sequelize');
+// require('dotenv').config();
+
+// let sequelize;
+
+// // Detect Render deployment
+// const isRender = !!process.env.DATABASE_URL;
+
+// if (isRender) {
+//     console.log("🌐 Using Render PostgreSQL");
+
+//     sequelize = new Sequelize(process.env.DATABASE_URL, {
+//         dialect: "postgres",
+//         protocol: "postgres",
+//         logging: false,
+//         dialectOptions: {
+//             ssl: {
+//                 require: true,
+//                 rejectUnauthorized: false
+//             }
+//         }
+//     });
+
+// } else {
+//     console.log("💾 Using Local SQLite");
+
+//     sequelize = new Sequelize({
+//         dialect: 'sqlite',
+//         storage: './database.sqlite',
+//         logging: false
+//     });
+// }
+
+// /**
+//  * Test DB connection + sync models
+//  */
+// async function connectDB() {
+//     try {
+//         await sequelize.authenticate();
+//         console.log("✅ Database connected");
+
+//         await sequelize.sync();
+//         console.log("✅ Database synced");
+//     } catch (error) {
+//         console.error("❌ Database connection failed:", error);
+//     }
+// }
+
+// connectDB();
+
+// module.exports = sequelize;
 
 
 
