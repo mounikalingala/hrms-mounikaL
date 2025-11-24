@@ -6,7 +6,7 @@ import { FaPlus } from 'react-icons/fa';
 export default function TeamList() {
     const [teams, setTeams] = useState([]);
     const [editing, setEditing] = useState(null);
-    const [showForm, setShowForm] = useState(false)
+    //const [showForm, setShowForm] = useState(false)
 
     async function load() {
         try {
